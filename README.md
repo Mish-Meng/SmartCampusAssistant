@@ -2,6 +2,8 @@
 
 A SwiftUI iPhone app that helps students navigate campus life — schedules, dining, buildings, events, and a built-in assistant.
 
+**Repository:** https://github.com/Mish-Meng/SmartCampusAssistant
+
 ## Requirements
 
 - macOS with **Xcode 15+**
@@ -12,7 +14,10 @@ A SwiftUI iPhone app that helps students navigate campus life — schedules, din
 
 ## Getting Started
 
-1. Copy or clone this folder to your Mac.
+1. Clone the repo on your Mac:
+   ```bash
+   git clone https://github.com/Mish-Meng/SmartCampusAssistant.git
+   ```
 2. Open `SmartCampusAssistant.xcodeproj` in Xcode.
 3. Select an iPhone simulator (e.g. iPhone 15).
 4. Press **⌘R** to build and run.
@@ -26,6 +31,7 @@ SmartCampusAssistant/
 ├── Models/                         # Data models
 ├── ViewModels/                     # MVVM view models
 ├── Views/                          # SwiftUI screens
+│   ├── Auth/
 │   ├── Home/
 │   ├── Schedule/
 │   ├── Map/
@@ -37,9 +43,10 @@ SmartCampusAssistant/
 
 ## Features (v1 scaffold)
 
-| Tab | Description |
-|-----|-------------|
-| **Home** | Greeting, upcoming classes, featured events |
+| Screen | Description |
+|--------|-------------|
+| **Sign In** | Email/password and Google sign-in (placeholder auth) |
+| **Home** | Greeting, upcoming classes, featured events, sign out |
 | **Schedule** | Full daily class list |
 | **Map** | Searchable campus buildings |
 | **Dining** | Open/closed status and menu highlights |

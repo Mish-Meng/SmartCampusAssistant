@@ -15,6 +15,11 @@ final class AuthViewModel: ObservableObject {
             return
         }
 
+        guard trimmedEmail.contains("@"), trimmedEmail.contains(".") else {
+            errorMessage = "Please enter a valid university email."
+            return
+        }
+
         isLoading = true
         errorMessage = nil
 

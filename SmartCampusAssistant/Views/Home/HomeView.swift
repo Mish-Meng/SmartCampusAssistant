@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct HomeView: View {
+    @EnvironmentObject private var authViewModel: AuthViewModel
     @StateObject private var viewModel = HomeViewModel()
 
     var body: some View {
@@ -15,6 +16,14 @@ struct HomeView: View {
             }
             .background(AppTheme.screenBackground)
             .navigationTitle("Campus")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Sign Out", role: .destructive) {
+                        authViewModel.signOut()
+                    }
+                    .font(.subheadline)
+                }
+            }
             .refreshable {
                 viewModel.refresh()
             }
@@ -121,4 +130,5 @@ struct EventRowView: View {
 
 #Preview {
     HomeView()
+        .environmentObject(AuthViewModel())
 }
