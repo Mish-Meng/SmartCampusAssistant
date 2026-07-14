@@ -6,13 +6,37 @@ enum TaskPriority: String, CaseIterable {
     case high = "HIGH"
 }
 
-enum TaskColumnKind: String, CaseIterable, Identifiable {
+enum TaskColumnKind: String, CaseIterable, Identifiable, Hashable {
     case yesterday = "Yesterday"
     case today = "Today"
     case inProgress = "In Progress"
     case analysed = "Analysed"
+    case accomplished = "Accomplished"
+    case closed = "Closed"
 
     var id: String { rawValue }
+
+    var icon: String {
+        switch self {
+        case .yesterday: return "clock.arrow.circlepath"
+        case .today: return "sun.max.fill"
+        case .inProgress: return "arrow.triangle.2.circlepath"
+        case .analysed: return "chart.bar.doc.horizontal"
+        case .accomplished: return "checkmark.seal.fill"
+        case .closed: return "archivebox.fill"
+        }
+    }
+
+    var iconColor: String {
+        switch self {
+        case .yesterday: return "orange"
+        case .today: return "yellow"
+        case .inProgress: return "blue"
+        case .analysed: return "purple"
+        case .accomplished: return "green"
+        case .closed: return "gray"
+        }
+    }
 }
 
 enum DashboardMenuItem: String, CaseIterable, Identifiable {

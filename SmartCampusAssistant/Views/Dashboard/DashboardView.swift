@@ -5,47 +5,146 @@ struct DashboardView: View {
     @StateObject private var viewModel = DashboardViewModel()
 
     var body: some View {
-        VStack(spacing: 0) {
-            DashboardHeaderView(
-                userName: authViewModel.displayName,
-                userEmail: authViewModel.displayEmail,
-                onSignOut: authViewModel.signOut
-            )
+        NavigationStack {
+            VStack(spacing: 0) {
+                DashboardHeaderView(
+                    userName: authViewModel.displayName,
+                    userEmail: authViewModel.displayEmail,
+                    onSignOut: authViewModel.signOut
+                )
 
-            DashboardTabBar(selectedTab: $viewModel.selectedTab)
+                DashboardTabBar(selectedTab: $viewModel.selectedTab)
 
-            switch viewModel.selectedTab {
-            case .dashboard:
-                dashboardContent
-            case .calendar:
-                ScheduleView()
-            case .settings:
-                SettingsPlaceholderView(onSignOut: authViewModel.signOut)
+                switch viewModel.selectedTab {
+                case .dashboard:
+                    dashboardContent
+                case .calendar:
+                    ScheduleView()
+                case .settings:
+                    SettingsPlaceholderView(onSignOut: authViewModel.signOut)
+                }
+            }
+            .background(AppTheme.dashboardBackground)
+            .navigationDestination(for: TaskColumnKind.self) { kind in
+                TaskCategoryDetailView(
+                    kind: kind,
+                    tasks: viewModel.tasks(for: kind)
+                )
             }
         }
-        .background(Color(red: 0.97, green: 0.97, blue: 0.98))
     }
 
     private var dashboardContent: some View {
-        VStack(spacing: 0) {
-            DashboardMenuBar(selectedItem: $viewModel.selectedMenuItem)
+        ScrollView {
+            VStack(spacing: 20) {
+                categoryGrid
+                AIAssistantBanner()
+            }
+            .padding(16)
+        }
+    }
 
-            DashboardToolbar(searchText: $viewModel.searchText)
-
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(alignment: .top, spacing: 16) {
-                    ForEach(viewModel.filteredColumns) { column in
-                        TaskColumnView(column: column)
-                    }
+    private var categoryGrid: some View {
+        LazyVGrid(
+            columns: [
+                GridItem(.flexible(), spacing: 16),
+                GridItem(.flexible(), spacing: 16)
+            ],
+            spacing: 16
+        ) {
+            ForEach(TaskColumnKind.allCases) { kind in
+                NavigationLink(value: kind) {
+                    TaskCategoryCard(
+                        kind: kind,
+                        count: viewModel.count(for: kind)
+                    )
                 }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
+                .buttonStyle(.plain)
+            }
+        }
+    }
+}
+
+// MARK: - Category Card
+
+struct TaskCategoryCard: View {
+    let kind: TaskColumnKind
+    let count: Int
+
+    var body: some View {
+        VStack(spacing: 16) {
+            ZStack {
+                Circle()
+                    .fill(iconBackgroundColor.opacity(0.25))
+                    .frame(width: 72, height: 72)
+
+                Image(systemName: kind.icon)
+                    .font(.system(size: 32))
+                    .foregroundStyle(iconForegroundColor)
             }
 
-            AIAssistantBanner()
-                .padding(.horizontal, 16)
-                .padding(.bottom, 12)
+            VStack(spacing: 4) {
+                Text(kind.rawValue)
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.white)
+
+                if count > 0 {
+                    Text("\(count) task\(count == 1 ? "" : "s")")
+                        .font(.caption2)
+                        .foregroundStyle(.white.opacity(0.6))
+                }
+            }
         }
+        .frame(maxWidth: .infinity)
+        .frame(height: 160)
+        .background(AppTheme.dashboardCard)
+        .clipShape(RoundedRectangle(cornerRadius: AppTheme.dashboardCardRadius))
+    }
+
+    private var iconForegroundColor: Color {
+        switch kind.iconColor {
+        case "orange": return .orange
+        case "yellow": return .yellow
+        case "blue": return .blue
+        case "purple": return AppTheme.purple
+        case "green": return .green
+        default: return .gray
+        }
+    }
+
+    private var iconBackgroundColor: Color {
+        iconForegroundColor
+    }
+}
+
+// MARK: - Category Detail
+
+struct TaskCategoryDetailView: View {
+    let kind: TaskColumnKind
+    let tasks: [LectureTask]
+
+    var body: some View {
+        Group {
+            if tasks.isEmpty {
+                ContentUnavailableView(
+                    "No tasks yet",
+                    systemImage: kind.icon,
+                    description: Text("Tasks in \(kind.rawValue) will appear here.")
+                )
+            } else {
+                List(tasks) { task in
+                    LectureTaskCard(task: task)
+                        .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
+                        .listRowBackground(Color.clear)
+                        .listRowSeparator(.hidden)
+                }
+                .listStyle(.plain)
+            }
+        }
+        .navigationTitle(kind.rawValue)
+        .navigationBarTitleDisplayMode(.large)
+        .background(AppTheme.dashboardBackground)
     }
 }
 
@@ -63,6 +162,7 @@ struct DashboardHeaderView: View {
                 Text("Smart Campus")
                     .font(.headline)
                     .fontWeight(.bold)
+                    .foregroundStyle(.white)
             }
 
             Spacer()
@@ -71,9 +171,10 @@ struct DashboardHeaderView: View {
                 Text(userName)
                     .font(.subheadline)
                     .fontWeight(.semibold)
+                    .foregroundStyle(.white)
                 Text(userEmail)
                     .font(.caption2)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.white.opacity(0.6))
             }
 
             Menu {
@@ -86,7 +187,7 @@ struct DashboardHeaderView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
-        .background(Color.white)
+        .background(AppTheme.dashboardBackground)
     }
 }
 
@@ -104,7 +205,7 @@ struct DashboardTabBar: View {
                     Text(tab.rawValue)
                         .font(.subheadline)
                         .fontWeight(selectedTab == tab ? .semibold : .regular)
-                        .foregroundStyle(selectedTab == tab ? AppTheme.purple : .secondary)
+                        .foregroundStyle(selectedTab == tab ? .white : .white.opacity(0.5))
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
                         .overlay(alignment: .bottom) {
@@ -117,150 +218,11 @@ struct DashboardTabBar: View {
                 }
             }
         }
-        .background(Color.white)
+        .background(AppTheme.dashboardBackground)
     }
 }
 
-// MARK: - Sidebar Menu
-
-struct DashboardMenuBar: View {
-    @Binding var selectedItem: DashboardMenuItem
-
-    var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                ForEach(DashboardMenuItem.allCases) { item in
-                    Button {
-                        selectedItem = item
-                    } label: {
-                        HStack(spacing: 6) {
-                            Image(systemName: item.icon)
-                                .font(.caption)
-                            Text(item.rawValue)
-                                .font(.caption)
-                                .fontWeight(.medium)
-                        }
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 8)
-                        .background(selectedItem == item ? AppTheme.purple.opacity(0.12) : Color.white)
-                        .foregroundStyle(selectedItem == item ? AppTheme.purple : .primary)
-                        .clipShape(Capsule())
-                        .overlay(
-                            Capsule()
-                                .stroke(selectedItem == item ? AppTheme.purple.opacity(0.3) : Color(.systemGray4), lineWidth: 1)
-                        )
-                    }
-                }
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 10)
-        }
-        .background(Color.white)
-    }
-}
-
-// MARK: - Toolbar
-
-struct DashboardToolbar: View {
-    @Binding var searchText: String
-
-    var body: some View {
-        HStack(spacing: 10) {
-            HStack(spacing: 8) {
-                Image(systemName: "magnifyingglass")
-                    .foregroundStyle(.secondary)
-                TextField("Search tasks...", text: $searchText)
-                    .font(.subheadline)
-            }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 10)
-            .background(Color.white)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(Color(.systemGray4), lineWidth: 1)
-            )
-
-            Button {
-            } label: {
-                HStack(spacing: 4) {
-                    Image(systemName: "line.3.horizontal.decrease")
-                    Text("Filter")
-                }
-                .font(.caption)
-                .fontWeight(.medium)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 10)
-                .background(Color.white)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color(.systemGray4), lineWidth: 1)
-                )
-            }
-            .foregroundStyle(.primary)
-
-            Button {
-            } label: {
-                HStack(spacing: 4) {
-                    Image(systemName: "plus")
-                    Text("New Task")
-                }
-                .font(.caption)
-                .fontWeight(.semibold)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 10)
-                .foregroundStyle(.white)
-                .background(AppTheme.primaryGradient)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-            }
-        }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 10)
-    }
-}
-
-// MARK: - Kanban Column
-
-struct TaskColumnView: View {
-    let column: TaskColumn
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text(column.title)
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                Text("(\(column.count))")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-
-            if column.tasks.isEmpty {
-                RoundedRectangle(cornerRadius: 12)
-                    .strokeBorder(Color(.systemGray4), style: StrokeStyle(lineWidth: 1, dash: [6]))
-                    .frame(width: 220, height: 120)
-                    .overlay {
-                        Image(systemName: "plus")
-                            .foregroundStyle(.secondary)
-                    }
-            } else {
-                ScrollView {
-                    VStack(spacing: 10) {
-                        ForEach(column.tasks) { task in
-                            LectureTaskCard(task: task)
-                        }
-                    }
-                }
-                .frame(width: 220)
-            }
-        }
-        .padding(12)
-        .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 14))
-        .shadow(color: .black.opacity(0.04), radius: 6, x: 0, y: 2)
-    }
-}
+// MARK: - Task Card
 
 struct LectureTaskCard: View {
     let task: LectureTask
@@ -271,7 +233,7 @@ struct LectureTaskCard: View {
                 Text("LECTURE")
                     .font(.caption2)
                     .fontWeight(.bold)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.white.opacity(0.5))
 
                 Spacer()
 
@@ -280,7 +242,7 @@ struct LectureTaskCard: View {
                     .fontWeight(.bold)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 3)
-                    .background(priorityColor.opacity(0.15))
+                    .background(priorityColor.opacity(0.2))
                     .foregroundStyle(priorityColor)
                     .clipShape(Capsule())
             }
@@ -288,6 +250,7 @@ struct LectureTaskCard: View {
             Text(task.title)
                 .font(.subheadline)
                 .fontWeight(.semibold)
+                .foregroundStyle(.white)
                 .lineLimit(2)
 
             HStack(spacing: 4) {
@@ -296,7 +259,7 @@ struct LectureTaskCard: View {
                 Text(task.time)
                     .font(.caption)
             }
-            .foregroundStyle(.secondary)
+            .foregroundStyle(.white.opacity(0.6))
 
             HStack(spacing: 4) {
                 Image(systemName: "mappin.and.ellipse")
@@ -305,15 +268,11 @@ struct LectureTaskCard: View {
                     .font(.caption)
                     .lineLimit(1)
             }
-            .foregroundStyle(.secondary)
+            .foregroundStyle(.white.opacity(0.6))
         }
-        .padding(12)
-        .background(Color(red: 0.98, green: 0.98, blue: 0.99))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(Color(.systemGray5), lineWidth: 1)
-        )
+        .padding(14)
+        .background(AppTheme.dashboardCard)
+        .clipShape(RoundedRectangle(cornerRadius: 14))
     }
 
     private var priorityColor: Color {
@@ -370,10 +329,11 @@ struct SettingsPlaceholderView: View {
             Text("Settings")
                 .font(.title2)
                 .fontWeight(.semibold)
+                .foregroundStyle(.white)
 
             Text("Account and app preferences coming soon.")
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.white.opacity(0.6))
 
             Button("Sign Out", role: .destructive, action: onSignOut)
                 .buttonStyle(.bordered)
@@ -381,6 +341,7 @@ struct SettingsPlaceholderView: View {
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(AppTheme.dashboardBackground)
     }
 }
 

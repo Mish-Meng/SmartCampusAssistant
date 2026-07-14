@@ -11,6 +11,14 @@ final class DashboardViewModel: ObservableObject {
         loadSampleData()
     }
 
+    func tasks(for kind: TaskColumnKind) -> [LectureTask] {
+        columns.first { $0.id == kind }?.tasks ?? []
+    }
+
+    func count(for kind: TaskColumnKind) -> Int {
+        tasks(for: kind).count
+    }
+
     var filteredColumns: [TaskColumn] {
         guard !searchText.isEmpty else { return columns }
 
@@ -24,7 +32,7 @@ final class DashboardViewModel: ObservableObject {
     }
 
     private func loadSampleData() {
-        let lectures = [
+        let analysedLectures = [
             LectureTask(
                 id: UUID(),
                 title: "BBT3105 Cost Accounting for I",
@@ -45,7 +53,10 @@ final class DashboardViewModel: ObservableObject {
                 time: "2:00 PM",
                 location: "STM-A L2-14",
                 priority: .medium
-            ),
+            )
+        ]
+
+        let todayTasks = [
             LectureTask(
                 id: UUID(),
                 title: "BBT2203 Database Systems",
@@ -55,11 +66,33 @@ final class DashboardViewModel: ObservableObject {
             )
         ]
 
+        let inProgressTasks = [
+            LectureTask(
+                id: UUID(),
+                title: "Lab Report — Data Structures",
+                time: "Due 5:00 PM",
+                location: "Online Submission",
+                priority: .high
+            )
+        ]
+
+        let accomplishedTasks = [
+            LectureTask(
+                id: UUID(),
+                title: "BBT2101 Introduction to Programming",
+                time: "Completed",
+                location: "STM-A L1-03",
+                priority: .low
+            )
+        ]
+
         columns = [
             TaskColumn(id: .yesterday, tasks: []),
-            TaskColumn(id: .today, tasks: []),
-            TaskColumn(id: .inProgress, tasks: []),
-            TaskColumn(id: .analysed, tasks: lectures)
+            TaskColumn(id: .today, tasks: todayTasks),
+            TaskColumn(id: .inProgress, tasks: inProgressTasks),
+            TaskColumn(id: .analysed, tasks: analysedLectures),
+            TaskColumn(id: .accomplished, tasks: accomplishedTasks),
+            TaskColumn(id: .closed, tasks: [])
         ]
     }
 }
