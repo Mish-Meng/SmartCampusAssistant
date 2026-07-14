@@ -8,6 +8,20 @@ final class AuthViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
 
+    var displayName: String {
+        if email.isEmpty { return "Michelle Jelimo" }
+        let localPart = email.split(separator: "@").first.map(String.init) ?? email
+        return localPart
+            .replacingOccurrences(of: ".", with: " ")
+            .split(separator: " ")
+            .map { $0.capitalized }
+            .joined(separator: " ")
+    }
+
+    var displayEmail: String {
+        email.isEmpty ? "michellejelimo32@gmail.com" : email
+    }
+
     func signIn() {
         let trimmedEmail = email.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedEmail.isEmpty, !password.isEmpty else {
