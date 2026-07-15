@@ -6,16 +6,6 @@ struct CampusChatSectionView: View {
     }
 }
 
-struct JoinClassView: View {
-    var body: some View {
-        DashboardSectionPlaceholder(
-            title: "Join Class",
-            icon: "video.fill",
-            description: "Join live lectures and virtual classroom sessions."
-        )
-    }
-}
-
 struct IntegrationsView: View {
     var body: some View {
         DashboardSectionPlaceholder(
