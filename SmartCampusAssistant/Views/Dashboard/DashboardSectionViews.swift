@@ -6,16 +6,6 @@ struct CampusChatSectionView: View {
     }
 }
 
-struct AssignmentsView: View {
-    var body: some View {
-        DashboardSectionPlaceholder(
-            title: "Assignments",
-            icon: "book.closed",
-            description: "Track upcoming assignments, due dates, and submission status."
-        )
-    }
-}
-
 struct JoinClassView: View {
     var body: some View {
         DashboardSectionPlaceholder(

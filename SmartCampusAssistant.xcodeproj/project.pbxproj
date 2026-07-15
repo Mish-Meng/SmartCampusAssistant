@@ -29,6 +29,10 @@
 		A10000010000000000000014 /* DashboardSectionViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000010000000000000015 /* DashboardSectionViews.swift */; };
 		A10000010000000000000015 /* TaskBreakdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000010000000000000016 /* TaskBreakdownView.swift */; };
 		A10000010000000000000016 /* TaskBreakdownViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000010000000000000017 /* TaskBreakdownViewModel.swift */; };
+		A10000010000000000000017 /* AssignmentModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000010000000000000018 /* AssignmentModels.swift */; };
+		A10000010000000000000018 /* GoogleClassroomService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000010000000000000019 /* GoogleClassroomService.swift */; };
+		A10000010000000000000019 /* AssignmentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000001000000000000001A /* AssignmentsViewModel.swift */; };
+		A1000001000000000000001A /* AssignmentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000001000000000000001B /* AssignmentsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +58,10 @@
 		A20000010000000000000015 /* DashboardSectionViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSectionViews.swift; sourceTree = "<group>"; };
 		A20000010000000000000016 /* TaskBreakdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskBreakdownView.swift; sourceTree = "<group>"; };
 		A20000010000000000000017 /* TaskBreakdownViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskBreakdownViewModel.swift; sourceTree = "<group>"; };
+		A20000010000000000000018 /* AssignmentModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentModels.swift; sourceTree = "<group>"; };
+		A20000010000000000000019 /* GoogleClassroomService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleClassroomService.swift; sourceTree = "<group>"; };
+		A2000001000000000000001A /* AssignmentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentsViewModel.swift; sourceTree = "<group>"; };
+		A2000001000000000000001B /* AssignmentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentsView.swift; sourceTree = "<group>"; };
 		A2000001000000000000000C /* SmartCampusAssistant.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SmartCampusAssistant.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 

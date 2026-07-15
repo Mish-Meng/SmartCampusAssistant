@@ -42,7 +42,7 @@ final class AuthViewModel: ObservableObject {
             self?.isLoading = false
             self?.isAuthenticated = true
         }
-    }
+    }d
 
     func signInWithGoogle() {
         isLoading = true
