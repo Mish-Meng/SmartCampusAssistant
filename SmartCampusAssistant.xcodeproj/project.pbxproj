@@ -156,6 +156,9 @@
 			isa = PBXGroup;
 			children = (
 				A20000010000000000000012 /* DashboardView.swift */,
+				A20000010000000000000013 /* DashboardMenuBottomNav.swift */,
+				A20000010000000000000014 /* StandupTasksView.swift */,
+				A20000010000000000000015 /* DashboardSectionViews.swift */,
 			);
 			path = Dashboard;
 			sourceTree = "<group>";
@@ -285,6 +288,9 @@
 				A1000001000000000000000F /* DashboardModels.swift in Sources */,
 				A10000010000000000000010 /* DashboardViewModel.swift in Sources */,
 				A10000010000000000000011 /* DashboardView.swift in Sources */,
+				A10000010000000000000012 /* DashboardMenuBottomNav.swift in Sources */,
+				A10000010000000000000013 /* StandupTasksView.swift in Sources */,
+				A10000010000000000000014 /* DashboardSectionViews.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
