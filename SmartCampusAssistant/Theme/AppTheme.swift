@@ -16,9 +16,10 @@ enum AppTheme {
     static let cornerRadius: CGFloat = 12
     static let cardPadding: CGFloat = 16
 
-    // Dashboard dark theme
-    static let dashboardBackground = Color(red: 0.07, green: 0.11, blue: 0.13)
-    static let dashboardCard = Color(red: 0.20, green: 0.24, blue: 0.27)
+    // Dashboard light theme
+    static let dashboardBackground = Color.white
+    static let dashboardCard = Color(red: 0.97, green: 0.97, blue: 0.98)
+    static let dashboardCardBorder = Color(.systemGray5)
     static let dashboardCardRadius: CGFloat = 20
 }
 

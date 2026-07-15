@@ -24,7 +24,7 @@ struct DashboardView: View {
                     SettingsPlaceholderView(onSignOut: authViewModel.signOut)
                 }
             }
-            .background(AppTheme.dashboardBackground)
+            .background(Color(.systemGroupedBackground))
             .navigationDestination(for: TaskColumnKind.self) { kind in
                 TaskCategoryDetailView(
                     kind: kind,
@@ -87,12 +87,12 @@ struct TaskCategoryCard: View {
                 Text(kind.rawValue)
                     .font(.subheadline)
                     .fontWeight(.semibold)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.primary)
 
                 if count > 0 {
                     Text("\(count) task\(count == 1 ? "" : "s")")
                         .font(.caption2)
-                        .foregroundStyle(.white.opacity(0.6))
+                        .foregroundStyle(.secondary)
                 }
             }
         }
@@ -100,6 +100,11 @@ struct TaskCategoryCard: View {
         .frame(height: 160)
         .background(AppTheme.dashboardCard)
         .clipShape(RoundedRectangle(cornerRadius: AppTheme.dashboardCardRadius))
+        .overlay(
+            RoundedRectangle(cornerRadius: AppTheme.dashboardCardRadius)
+                .stroke(AppTheme.dashboardCardBorder, lineWidth: 1)
+        )
+        .shadow(color: .black.opacity(0.04), radius: 8, x: 0, y: 4)
     }
 
     private var iconForegroundColor: Color {
@@ -144,7 +149,7 @@ struct TaskCategoryDetailView: View {
         }
         .navigationTitle(kind.rawValue)
         .navigationBarTitleDisplayMode(.large)
-        .background(AppTheme.dashboardBackground)
+        .background(Color(.systemGroupedBackground))
     }
 }
 
@@ -162,7 +167,7 @@ struct DashboardHeaderView: View {
                 Text("Smart Campus")
                     .font(.headline)
                     .fontWeight(.bold)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.primary)
             }
 
             Spacer()
@@ -171,10 +176,10 @@ struct DashboardHeaderView: View {
                 Text(userName)
                     .font(.subheadline)
                     .fontWeight(.semibold)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.primary)
                 Text(userEmail)
                     .font(.caption2)
-                    .foregroundStyle(.white.opacity(0.6))
+                    .foregroundStyle(.secondary)
             }
 
             Menu {
@@ -187,7 +192,10 @@ struct DashboardHeaderView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
-        .background(AppTheme.dashboardBackground)
+        .background(Color.white)
+        .overlay(alignment: .bottom) {
+            Divider()
+        }
     }
 }
 
@@ -205,7 +213,7 @@ struct DashboardTabBar: View {
                     Text(tab.rawValue)
                         .font(.subheadline)
                         .fontWeight(selectedTab == tab ? .semibold : .regular)
-                        .foregroundStyle(selectedTab == tab ? .white : .white.opacity(0.5))
+                        .foregroundStyle(selectedTab == tab ? AppTheme.purple : .secondary)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
                         .overlay(alignment: .bottom) {
@@ -218,7 +226,10 @@ struct DashboardTabBar: View {
                 }
             }
         }
-        .background(AppTheme.dashboardBackground)
+        .background(Color.white)
+        .overlay(alignment: .bottom) {
+            Divider()
+        }
     }
 }
 
@@ -233,7 +244,7 @@ struct LectureTaskCard: View {
                 Text("LECTURE")
                     .font(.caption2)
                     .fontWeight(.bold)
-                    .foregroundStyle(.white.opacity(0.5))
+                    .foregroundStyle(.secondary)
 
                 Spacer()
 
@@ -242,7 +253,7 @@ struct LectureTaskCard: View {
                     .fontWeight(.bold)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 3)
-                    .background(priorityColor.opacity(0.2))
+                    .background(priorityColor.opacity(0.15))
                     .foregroundStyle(priorityColor)
                     .clipShape(Capsule())
             }
@@ -250,7 +261,7 @@ struct LectureTaskCard: View {
             Text(task.title)
                 .font(.subheadline)
                 .fontWeight(.semibold)
-                .foregroundStyle(.white)
+                .foregroundStyle(.primary)
                 .lineLimit(2)
 
             HStack(spacing: 4) {
@@ -259,7 +270,7 @@ struct LectureTaskCard: View {
                 Text(task.time)
                     .font(.caption)
             }
-            .foregroundStyle(.white.opacity(0.6))
+            .foregroundStyle(.secondary)
 
             HStack(spacing: 4) {
                 Image(systemName: "mappin.and.ellipse")
@@ -268,11 +279,16 @@ struct LectureTaskCard: View {
                     .font(.caption)
                     .lineLimit(1)
             }
-            .foregroundStyle(.white.opacity(0.6))
+            .foregroundStyle(.secondary)
         }
         .padding(14)
-        .background(AppTheme.dashboardCard)
+        .background(Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 14))
+        .overlay(
+            RoundedRectangle(cornerRadius: 14)
+                .stroke(AppTheme.dashboardCardBorder, lineWidth: 1)
+        )
+        .shadow(color: .black.opacity(0.04), radius: 4, x: 0, y: 2)
     }
 
     private var priorityColor: Color {
@@ -329,11 +345,11 @@ struct SettingsPlaceholderView: View {
             Text("Settings")
                 .font(.title2)
                 .fontWeight(.semibold)
-                .foregroundStyle(.white)
+                .foregroundStyle(.primary)
 
             Text("Account and app preferences coming soon.")
                 .font(.subheadline)
-                .foregroundStyle(.white.opacity(0.6))
+                .foregroundStyle(.secondary)
 
             Button("Sign Out", role: .destructive, action: onSignOut)
                 .buttonStyle(.bordered)
@@ -341,7 +357,7 @@ struct SettingsPlaceholderView: View {
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(AppTheme.dashboardBackground)
+        .background(Color(.systemGroupedBackground))
     }
 }
 
