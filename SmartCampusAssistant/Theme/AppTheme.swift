@@ -9,6 +9,11 @@ enum AppTheme {
         startPoint: .leading,
         endPoint: .trailing
     )
+    static let infoGradient = LinearGradient(
+        colors: [purple, Color(red: 0.95, green: 0.45, blue: 0.25)],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    )
     static let campusGreen = Color(red: 0.12, green: 0.45, blue: 0.32)
     static let cardBackground = Color(.secondarySystemGroupedBackground)
     static let screenBackground = Color(.systemGroupedBackground)

@@ -1,15 +1,5 @@
 import SwiftUI
 
-struct TaskBreakdownView: View {
-    var body: some View {
-        DashboardSectionPlaceholder(
-            title: "Task Breakdown",
-            icon: "chart.bar.xaxis",
-            description: "View your tasks organized by course, priority, and deadline."
-        )
-    }
-}
-
 struct CampusChatSectionView: View {
     var body: some View {
         AssistantView()
