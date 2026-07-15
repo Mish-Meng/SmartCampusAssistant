@@ -4,95 +4,121 @@ struct StandupTasksView: View {
     @ObservedObject var viewModel: DashboardViewModel
 
     var body: some View {
-        VStack(spacing: 0) {
-            DashboardToolbar(searchText: $viewModel.searchText)
-
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(alignment: .top, spacing: 14) {
-                    ForEach(viewModel.filteredColumns) { column in
-                        KanbanColumnView(column: column)
-                    }
+        NavigationStack {
+            ScrollView {
+                VStack(spacing: 20) {
+                    categoryGrid
+                    AIAssistantBanner()
                 }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
+                .padding(16)
             }
+            .background(Color(.systemGroupedBackground))
+            .navigationDestination(for: TaskColumnKind.self) { kind in
+                TaskCategoryDetailView(
+                    kind: kind,
+                    tasks: viewModel.tasks(for: kind)
+                )
+            }
+        }
+    }
 
-            AIAssistantBanner()
-                .padding(.horizontal, 16)
-                .padding(.bottom, 8)
+    private var categoryGrid: some View {
+        LazyVGrid(
+            columns: [
+                GridItem(.flexible(), spacing: 16),
+                GridItem(.flexible(), spacing: 16)
+            ],
+            spacing: 16
+        ) {
+            ForEach(TaskColumnKind.allCases) { kind in
+                NavigationLink(value: kind) {
+                    TaskCategoryCard(
+                        kind: kind,
+                        count: viewModel.count(for: kind)
+                    )
+                }
+                .buttonStyle(.plain)
+            }
         }
     }
 }
 
-struct KanbanColumnView: View {
-    let column: TaskColumn
+// MARK: - Category Card
+
+struct TaskCategoryCard: View {
+    let kind: TaskColumnKind
+    let count: Int
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(spacing: 6) {
+        VStack(spacing: 16) {
+            ZStack {
                 Circle()
-                    .fill(column.id.columnDotColor)
-                    .frame(width: 8, height: 8)
+                    .fill(kind.iconColor.opacity(0.15))
+                    .frame(width: 72, height: 72)
 
-                Text(column.title)
+                Image(systemName: kind.icon)
+                    .font(.system(size: 32))
+                    .foregroundStyle(kind.iconColor)
+            }
+
+            VStack(spacing: 4) {
+                Text(kind.rawValue)
                     .font(.subheadline)
                     .fontWeight(.semibold)
+                    .foregroundStyle(.primary)
+                    .multilineTextAlignment(.center)
 
-                Text("\(column.count)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-
-                Spacer()
-
-                Button {
-                } label: {
-                    Image(systemName: "plus")
-                        .font(.caption)
+                if count > 0 {
+                    Text("\(count) task\(count == 1 ? "" : "s")")
+                        .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
             }
-
-            if column.tasks.isEmpty {
-                emptyColumnPlaceholder
-            } else {
-                ScrollView {
-                    VStack(spacing: 10) {
-                        ForEach(column.tasks) { task in
-                            KanbanTaskCard(task: task)
-                        }
-                    }
-                }
-            }
         }
-        .frame(width: 240)
-        .padding(12)
+        .frame(maxWidth: .infinity)
+        .frame(height: 160)
         .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .clipShape(RoundedRectangle(cornerRadius: AppTheme.dashboardCardRadius))
         .overlay(
-            RoundedRectangle(cornerRadius: 14)
+            RoundedRectangle(cornerRadius: AppTheme.dashboardCardRadius)
                 .stroke(AppTheme.dashboardCardBorder, lineWidth: 1)
         )
-    }
-
-    private var emptyColumnPlaceholder: some View {
-        VStack(spacing: 10) {
-            Text("NO TASKS YET")
-                .font(.caption2)
-                .fontWeight(.semibold)
-                .foregroundStyle(.secondary)
-
-            RoundedRectangle(cornerRadius: 12)
-                .strokeBorder(Color(.systemGray4), style: StrokeStyle(lineWidth: 1, dash: [6]))
-                .frame(height: 100)
-                .overlay {
-                    Image(systemName: "plus")
-                        .foregroundStyle(.secondary)
-                }
-        }
+        .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 4)
     }
 }
 
-struct KanbanTaskCard: View {
+// MARK: - Category Detail
+
+struct TaskCategoryDetailView: View {
+    let kind: TaskColumnKind
+    let tasks: [LectureTask]
+
+    var body: some View {
+        Group {
+            if tasks.isEmpty {
+                ContentUnavailableView(
+                    "No tasks yet",
+                    systemImage: kind.icon,
+                    description: Text("Tasks in \(kind.rawValue) will appear here.")
+                )
+            } else {
+                ScrollView {
+                    VStack(spacing: 12) {
+                        ForEach(tasks) { task in
+                            TaskDetailCard(task: task)
+                        }
+                    }
+                    .padding(16)
+                }
+            }
+        }
+        .navigationTitle(kind.rawValue)
+        .navigationBarTitleDisplayMode(.large)
+        .background(Color(.systemGroupedBackground))
+    }
+}
+
+struct TaskDetailCard: View {
     let task: LectureTask
 
     var body: some View {

@@ -38,6 +38,10 @@ enum TaskColumnKind: String, CaseIterable, Identifiable, Hashable {
         case .closed: return .gray
         }
     }
+
+    var iconColor: Color {
+        columnDotColor
+    }
 }
 
 enum DashboardMenuItem: String, CaseIterable, Identifiable {
