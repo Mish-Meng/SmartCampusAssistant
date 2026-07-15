@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 enum TaskPriority: String, CaseIterable {
     case low = "LOW"
@@ -27,14 +28,14 @@ enum TaskColumnKind: String, CaseIterable, Identifiable, Hashable {
         }
     }
 
-    var iconColor: String {
+    var columnDotColor: Color {
         switch self {
-        case .yesterday: return "orange"
-        case .today: return "yellow"
-        case .inProgress: return "blue"
-        case .analysed: return "purple"
-        case .accomplished: return "green"
-        case .closed: return "gray"
+        case .yesterday: return .orange
+        case .today: return .blue
+        case .inProgress: return .orange
+        case .analysed: return AppTheme.purple
+        case .accomplished: return .green
+        case .closed: return .gray
         }
     }
 }
@@ -52,11 +53,31 @@ enum DashboardMenuItem: String, CaseIterable, Identifiable {
     var icon: String {
         switch self {
         case .standupTasks: return "checklist"
-        case .taskBreakdown: return "square.grid.2x2"
+        case .taskBreakdown: return "chart.bar.xaxis"
         case .campusChat: return "bubble.left.and.bubble.right"
-        case .assignments: return "doc.text"
-        case .joinClass: return "video"
-        case .integrations: return "link"
+        case .assignments: return "book.closed"
+        case .joinClass: return "video.fill"
+        case .integrations: return "point.3.connected.trianglepath.dotted"
+        }
+    }
+
+    var shortLabel: String {
+        switch self {
+        case .standupTasks: return "Tasks"
+        case .taskBreakdown: return "Breakdown"
+        case .campusChat: return "Chat"
+        case .assignments: return "Assign"
+        case .joinClass: return "Class"
+        case .integrations: return "Integrate"
+        }
+    }
+
+    var badgeCount: Int? {
+        switch self {
+        case .standupTasks: return nil
+        case .campusChat: return 3
+        case .assignments: return 2
+        default: return nil
         }
     }
 }

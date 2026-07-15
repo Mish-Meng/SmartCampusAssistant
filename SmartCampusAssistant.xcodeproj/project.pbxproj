@@ -24,6 +24,9 @@
 		A1000001000000000000000F /* DashboardModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000010000000000000010 /* DashboardModels.swift */; };
 		A10000010000000000000010 /* DashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000010000000000000011 /* DashboardViewModel.swift */; };
 		A10000010000000000000011 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000010000000000000012 /* DashboardView.swift */; };
+		A10000010000000000000012 /* DashboardMenuBottomNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000010000000000000013 /* DashboardMenuBottomNav.swift */; };
+		A10000010000000000000013 /* StandupTasksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000010000000000000014 /* StandupTasksView.swift */; };
+		A10000010000000000000014 /* DashboardSectionViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000010000000000000015 /* DashboardSectionViews.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +47,9 @@
 		A20000010000000000000010 /* DashboardModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardModels.swift; sourceTree = "<group>"; };
 		A20000010000000000000011 /* DashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModel.swift; sourceTree = "<group>"; };
 		A20000010000000000000012 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		A20000010000000000000013 /* DashboardMenuBottomNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardMenuBottomNav.swift; sourceTree = "<group>"; };
+		A20000010000000000000014 /* StandupTasksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandupTasksView.swift; sourceTree = "<group>"; };
+		A20000010000000000000015 /* DashboardSectionViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSectionViews.swift; sourceTree = "<group>"; };
 		A2000001000000000000000C /* SmartCampusAssistant.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SmartCampusAssistant.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
