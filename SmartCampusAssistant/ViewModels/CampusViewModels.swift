@@ -185,12 +185,14 @@ final class CampusMapViewModel: ObservableObject {
 final class AssistantViewModel: ObservableObject {
     @Published var messages: [ChatMessage] = []
     @Published var inputText: String = ""
+    @Published var isTyping = false
+    @Published var statusMessage: String?
 
     init() {
         messages = [
             ChatMessage(
                 id: UUID(),
-                content: "Hi! I'm your campus assistant. Ask me about classes, dining, events, or buildings.",
+                content: "Hi! I'm your Smart Campus Assistant. You can ask me about your schedule, assignments, exams, or where your next class is. You can also upload a photo of a syllabus or record a voice note!",
                 isFromUser: false,
                 timestamp: Date()
             )
@@ -199,35 +201,60 @@ final class AssistantViewModel: ObservableObject {
 
     func sendMessage() {
         let trimmed = inputText.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
+        guard !trimmed.isEmpty, !isTyping else { return }
 
         messages.append(
             ChatMessage(id: UUID(), content: trimmed, isFromUser: true, timestamp: Date())
         )
         inputText = ""
+        statusMessage = nil
 
-        let reply = generateReply(for: trimmed)
-        messages.append(
-            ChatMessage(id: UUID(), content: reply, isFromUser: false, timestamp: Date())
-        )
+        isTyping = true
+        let question = trimmed
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { [weak self] in
+            guard let self else { return }
+            let reply = self.generateReply(for: question)
+            self.messages.append(
+                ChatMessage(id: UUID(), content: reply, isFromUser: false, timestamp: Date())
+            )
+            self.isTyping = false
+        }
+    }
+
+    func uploadImage() {
+        statusMessage = "Image upload coming soon — paste syllabus text in chat for now."
+    }
+
+    func recordVoice() {
+        statusMessage = "Voice notes coming soon — type your question below for now."
     }
 
     private func generateReply(for question: String) -> String {
         let lowercased = question.lowercased()
 
+        if lowercased.contains("next class") || lowercased.contains("where is my class") {
+            return "Your next class is BBT3105 Cost Accounting at 4:15 PM in STM-B F1-02. Would you like directions?"
+        }
+        if lowercased.contains("assignment") || lowercased.contains("due") {
+            return "You have 3 assignments due this week: Cost Accounting Case Study (3 days), IT Project Sprint Report (5 days), and Database Normalization Quiz (7 days). Check Assignments for details."
+        }
+        if lowercased.contains("exam") || lowercased.contains("test") {
+            return "Your upcoming exams: Business Process Management midterm next Tuesday, and Database Systems quiz on Friday. Want me to add reminders?"
+        }
+        if lowercased.contains("schedule") || lowercased.contains("timetable") {
+            return "Today's classes: BBT2203 Database Systems at 10:30 AM (STM-B F1-05), BBT3105 Cost Accounting at 4:15 PM (STM-B F1-02), and BBT 2204 IT Project I at 7:15 PM (Online)."
+        }
         if lowercased.contains("dining") || lowercased.contains("food") || lowercased.contains("eat") {
             return "Main Dining Hall is open until 9 PM. Campus Café in Library Plaza serves sandwiches and coffee until 6 PM."
         }
-        if lowercased.contains("class") || lowercased.contains("schedule") {
-            return "Your next class is CS 301 Data Structures in Science Hall 204. Check the Schedule tab for your full day."
-        }
         if lowercased.contains("library") {
-            return "Central Library (LIB) is open until 11 PM on weekdays. Study rooms can be reserved from the library website."
+            return "Central Library is open until 11 PM on weekdays. Study rooms can be reserved from the library portal."
         }
-        if lowercased.contains("event") {
-            return "There's a Career Fair in the Student Union Ballroom in two days, and intramural soccer tomorrow at North Field."
+        if lowercased.contains("hello") || lowercased.contains("hi") {
+            return "Hello! I'm here to help with anything about campus — classes, assignments, exams, buildings, or dining. What would you like to know?"
         }
 
-        return "I can help with schedules, dining hours, campus buildings, and events. Try asking something like \"What's open for dinner?\" or \"Where is my next class?\""
+        return "I'm your campus AI assistant and I can help with schedules, assignments, exams, class locations, dining, and more. Try asking \"Where is my next class?\" or \"What assignments are due?\""
     }
 }

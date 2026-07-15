@@ -2,7 +2,7 @@ import SwiftUI
 
 struct CampusChatSectionView: View {
     var body: some View {
-        AssistantView()
+        CampusChatView()
     }
 }
 
